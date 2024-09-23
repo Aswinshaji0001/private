@@ -1,3 +1,4 @@
+let profile;
 document.getElementById("frm").addEventListener("submit",async(e)=>{
     e.preventDefault();
     const res=await fetch("http://localhost:3000/api/countemployees");
@@ -16,7 +17,7 @@ document.getElementById("frm").addEventListener("submit",async(e)=>{
     fetch("http://localhost:3000/api/addemp",{
         method:"POST",
         headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({empid,name,salary,experience,designation,phone,email})
+        body:JSON.stringify({empid,name,salary,experience,designation,phone,email,profile})
     }).then((res)=>{
         console.log(res);
         if(res.status==201){
@@ -34,3 +35,24 @@ document.getElementById("frm").addEventListener("submit",async(e)=>{
         
     });
 })
+
+document.getElementById("profile").addEventListener('change',async(e)=>{
+    console.log(document.getElementById("profile").files[0]);
+    profile = await convertTBase64(document.getElementById("profile").files[0])
+    console.log(profile)
+    document.getElementById("proimg").src=profile
+    
+})
+
+function convertTBase64(file){
+    return new Promise((resolve,reject)=>{
+        const fileReader=new FileReader();
+        fileReader.readAsDataURL(file);
+        fileReader.onload=()=>{
+            resolve(fileReader.result)
+        }
+        fileReader.onerror=(error)=>{
+            reject(error)
+        }
+    });
+}
